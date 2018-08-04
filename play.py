@@ -27,6 +27,19 @@ class Formi:
     def url(self):
         return url(self._link)
 
+    def need_sugar(self):
+        return self.hunger_s > 15
+
+    def need_protein(self):
+        return self.hunger_p > 15
+
+    def need_schutz(self):
+        #TODO
+        return False
+
+    def need_care(self):
+        return self.need_sugar() or self.need_protein() or self.need_schutz()
+
     def find_hunger(self, root):
         self.hunger_s = self._hunger_helper('sugar', root)
         self.hunger_p = self._hunger_helper('protein', root)
@@ -36,15 +49,14 @@ class Formi:
         hunger_string = str(root.find('span', id=hunger_span_id).parent.find_all(string=True, recursive=False))
         return integer(hunger_string)
 
-    def feed(self, food, amount=1):
-        data = {
+    def feed_data(self, food, amount=1):
+        return {
             'cat': '9',
             'action': 'addfood',
             'foodid': food.id,
             'amount': str(int(amount)),
             'id': self.id
         }
-        resp = requests.post(url('ameisenzimmer'))
 
 class Food:
     def __init__(self, option):
@@ -68,7 +80,7 @@ class Play:
         self.user = user
         self.pw = pw
         self.login()
-        #self.ameisenzimmer()
+        self.ameisenzimmer()
 
     def _post(self, url_string, **kwargs):
         resp = requests.post(url(url_string), cookies=self.cookies, **kwargs)
@@ -114,21 +126,31 @@ class Play:
         for formi in self.formis:
             formi.find_hunger(root)
             self.check_formi(formi)
-            #print(formi.hunger_s)
-            #print(formi.hunger_p)
 
-    def check_formi(self, formi):
-        root = self._get(formi.url)
+    def _parse_foods(self, root):
         selects = root.find_all('select', attrs={'name':'foodid'})
         self.foods = list()
         for select in selects:
             options = select.find_all('option')
             for option in options:
                 self.foods.append(Food(option))
-        most_food = max([f for f in self.foods if f.protein], key=lambda food:food.amount)
-        print(most_food.name, most_food.amount)
-        for f in self.foods:
-            print(f.name, f.amount)
+
+    def check_formi(self, formi):
+        if not formi.need_care():
+            print('All good in {}. Continue.'.format(formi.id))
+            return
+        root = self._get(formi.url)
+        self._parse_foods(root)
+        if formi.need_protein():
+            print('Giving protein to {}'.format(formi.id))
+            most_prot = max([f for f in self.foods if f.protein], key=lambda food:food.amount)
+            root = self._post('ameisenzimmer', data=formi.feed_data(most_prot))
+            #self._parse_foods(root)
+        if formi.need_sugar():
+            print('Giving sugar to {}'.format(formi.id))
+            most_prot = max([f for f in self.foods if f.sweet], key=lambda food:food.amount)
+            root = self._post('ameisenzimmer', data=formi.feed_data(most_prot))
+            #self._parse_foods(root)
 
 with open('credentials.txt', 'r') as creds:
     creds = creds.readlines()
