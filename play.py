@@ -130,4 +130,6 @@ class Play:
         for f in self.foods:
             print(f.name, f.amount)
 
-Play('', '')
+with open('credentials.txt', 'r') as creds:
+    creds = creds.readlines()
+    Play(creds[0].strip(), creds[1].strip())
