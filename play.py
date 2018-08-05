@@ -1,9 +1,12 @@
 #!/usr/bin/python3
 
+import os
 import re
 import requests
 from bs4 import BeautifulSoup as BE
 #import xml.etree.ElementTree as ET #unfortunately the page isn't valid xml and breaks the parser. so no xpath for this : (
+
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 def url(which):
     base_url = 'http://www.eatenbyants.de'
@@ -154,6 +157,6 @@ class Play:
             root = self._post('ameisenzimmer', data=formi.feed_data(most_prot))
             #self._parse_foods(root)
 
-with open('credentials.txt', 'r') as creds:
+with open(os.path.join(__location__, 'credentials.txt'), 'r') as creds:
     creds = creds.readlines()
     Play(creds[0].strip(), creds[1].strip())
