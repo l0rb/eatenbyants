@@ -106,6 +106,7 @@ class Play:
             #self.futtertiere_sammeln()
 
     def futtertiere_sammeln(self, duration=15):
+        print('starting futtertiere sammeln')
         data = {
             'dauer': duration,
             'cat': 2,
@@ -114,6 +115,7 @@ class Play:
         self._post('draussen', data=data)
 
     def klo_putzen(self):
+        print('starting klo putzen')
         data = {
             'cat': 3,
             'takejob': 301
