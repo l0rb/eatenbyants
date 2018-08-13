@@ -106,7 +106,12 @@ class Play:
         root = self._post('login', data=data)
         aktion = root.find('div', id='headercountdown')
         if not aktion:
-            random.choices([self.klo_putzen, self.futtertiere_sammeln], [2/3, 1/3])[0]()
+            if random.random() < 2/3:
+                self.klo_putzen()
+            else:
+                self.futtertiere_sammeln()
+
+            #random.choices([self.klo_putzen, self.futtertiere_sammeln], [2/3, 1/3])[0]() # only python 3.6
             #self.klo_putzen()
             #self.futtertiere_sammeln()
 
