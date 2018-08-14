@@ -178,3 +178,6 @@ with open(os.path.join(__location__, 'settings.txt'), 'r') as settings:
             Formi.feed_protein = int(line[1])
         if line[0] == 'feed_sugar':
             Formi.feed_sugar = int(line[1])
+    print('Running with the following settings:')
+    print(' feed_protein: {}'.format(Formi.feed_protein))
+    print(' feed_sugar: {}'.format(Formi.feed_sugar))
