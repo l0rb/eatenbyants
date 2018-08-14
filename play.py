@@ -54,7 +54,9 @@ class Formi:
     def _hunger_helper(self, which, root):
         hunger_span_id = '{}hunger{}'.format(which, self.id)
         hunger_string = str(root.find('span', id=hunger_span_id).parent.find_all(string=True, recursive=False))
-        return integer(hunger_string)
+        hunger_int = integer(hunger_string)
+        print('Detected hunger {}: {}'.format(which, hunger_int))
+        return hunger_int
 
     def feed_data(self, food, amount=1):
         return {
