@@ -1,0 +1,2 @@
+feed_protein=15
+feed_sugar=15

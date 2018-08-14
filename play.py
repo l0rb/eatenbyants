@@ -21,6 +21,9 @@ def integer(string):
     return int(''.join(char for char in string if char.isdigit()))
 
 class Formi:
+    feed_protein = 15
+    feed_sugar = 15
+
     def __init__(self, link, hunger_p=None, hunger_s=None):
         self._link = link
         self.id = re.search(r'(?<=id=)[0-9]*', link).group()
@@ -32,10 +35,10 @@ class Formi:
         return url(self._link)
 
     def need_sugar(self):
-        return self.hunger_s > 15
+        return self.hunger_s > Formi.feed_sugar
 
     def need_protein(self):
-        return self.hunger_p > 15
+        return self.hunger_p > Formi.feed_protein
 
     def need_schutz(self):
         #TODO
@@ -167,3 +170,11 @@ class Play:
 with open(os.path.join(__location__, 'credentials.txt'), 'r') as creds:
     creds = creds.readlines()
     Play(creds[0].strip(), creds[1].strip())
+
+with open(os.path.join(__location__, 'settings.txt'), 'r') as settings:
+    for line in settings.readlines():
+        line = line.split('=')
+        if line[0] == 'feed_protein':
+            Formi.feed_protein = int(line[1])
+        if line[0] == 'feed_sugar':
+            Formi.feed_sugar = int(line[1])
