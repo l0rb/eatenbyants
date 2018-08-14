@@ -169,10 +169,6 @@ class Play:
             root = self._post('ameisenzimmer', data=formi.feed_data(most_prot))
             #self._parse_foods(root)
 
-with open(os.path.join(__location__, 'credentials.txt'), 'r') as creds:
-    creds = creds.readlines()
-    Play(creds[0].strip(), creds[1].strip())
-
 with open(os.path.join(__location__, 'settings.txt'), 'r') as settings:
     for line in settings.readlines():
         line = line.split('=')
@@ -183,3 +179,7 @@ with open(os.path.join(__location__, 'settings.txt'), 'r') as settings:
     print('Running with the following settings:')
     print(' feed_protein: {}'.format(Formi.feed_protein))
     print(' feed_sugar: {}'.format(Formi.feed_sugar))
+
+with open(os.path.join(__location__, 'credentials.txt'), 'r') as creds:
+    creds = creds.readlines()
+    Play(creds[0].strip(), creds[1].strip())
