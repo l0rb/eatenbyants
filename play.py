@@ -168,6 +168,7 @@ class Play:
             most_prot = max([f for f in self.foods if f.sweet], key=lambda food:food.amount)
             root = self._post('ameisenzimmer', data=formi.feed_data(most_prot))
             #self._parse_foods(root)
+        self.check_formi(formi) # run recursively until we exit with no care needed
 
 with open(os.path.join(__location__, 'settings.txt'), 'r') as settings:
     for line in settings.readlines():
